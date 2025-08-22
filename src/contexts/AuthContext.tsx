@@ -10,6 +10,7 @@ export interface User {
   avatar?: string;
   permissions?: string[];
   clientId?: string;
+  organizationId?: string;
 }
 
 interface AuthContextType {
@@ -111,7 +112,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         role: data.role,
         avatar: data.avatar || undefined,
         permissions: data.permissions || [],
-        clientId: data.client_id || undefined
+        clientId: data.client_id || undefined,
+        organizationId: data.organization_id || undefined
       };
 
       console.log('✅ Profile loaded successfully (DETAILED):', {
@@ -120,7 +122,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         email: userProfile.email,
         role: userProfile.role,
         clientId: userProfile.clientId,
+        organizationId: userProfile.organizationId,
         rawClientId: data.client_id,
+        rawOrganizationId: data.organization_id,
         dataFromDB: data
       });
       return userProfile;

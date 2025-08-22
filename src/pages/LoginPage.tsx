@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff, LogIn, Mail, Lock, X, Sofa } from 'lucide-react';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -120,7 +121,7 @@ const LoginPage: React.FC = () => {
                   <h1 className="text-xl sm:text-2xl font-bold text-gray-900 font-['Montserrat'] tracking-tight leading-tight">
                     Wall Play Studio
                   </h1>
-                  <p className="text-xs sm:text-sm text-gray-500 font-small">Client Relationship Management</p>
+                  <p className="text-xs sm:text-sm text-gray-500 font-small">Sign In to Your Account</p>
                 </div>
               </div>
             </div>
@@ -180,7 +181,7 @@ const LoginPage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-black text-white py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-blue-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 shadow-sm hover:shadow-md touch-manipulation"
+                  className="w-full bg-black text-white py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-black/85 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 shadow-sm hover:shadow-md touch-manipulation"
                 >
                   {loading ? (
                     <LoadingSpinner size="sm" />
@@ -203,6 +204,15 @@ const LoginPage: React.FC = () => {
                   >
                     Forgot your password?
                   </button>
+                </div>
+
+                <div className="text-center">
+                  <Link
+                    to="/signup"
+                    className="text-gray-600 hover:text-gray-700 text-sm font-medium transition-colors touch-manipulation"
+                  >
+                    Don't have an account? Sign up
+                  </Link>
                 </div>
               </form>
             ) : (
@@ -238,7 +248,7 @@ const LoginPage: React.FC = () => {
                       <button
                         type="submit"
                         disabled={forgotPasswordLoading}
-                        className="w-full bg-blue-600 text-white py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 shadow-sm hover:shadow-md touch-manipulation"
+                        className="w-full bg-black/95 text-white py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-black/85 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 shadow-sm hover:shadow-md touch-manipulation"
                       >
                         {forgotPasswordLoading ? (
                           <LoadingSpinner size="sm" />
@@ -264,11 +274,7 @@ const LoginPage: React.FC = () => {
                   </>
                 ) : (
                   <div className="text-center space-y-4 sm:space-y-6">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                      <Mail className="w-8 h-8 text-green-600" />
-                    </div>
                     <div>
-                      <h2 className="text-xl font-bold text-gray-900 mb-2">Check Your Email</h2>
                       <p className="text-gray-600 text-sm mb-4">
                         We've sent a password reset link to <strong>{forgotPasswordEmail}</strong>
                       </p>

@@ -19,6 +19,7 @@ export interface Database {
         Row: {
           id: string;
           user_id: string | null;
+          organization_id: string | null;
           name: string;
           email: string;
           phone: string;
@@ -35,6 +36,7 @@ export interface Database {
         };
         Insert: {
           user_id?: string | null;
+          organization_id?: string | null;
           name: string;
           email: string;
           phone: string;
@@ -51,6 +53,7 @@ export interface Database {
         Update: {
           id?: string;
           user_id?: string | null;
+          organization_id?: string | null;
           name?: string;
           email?: string;
           phone?: string;
@@ -70,6 +73,7 @@ export interface Database {
         Row: {
           id: string;
           client_id: string;
+          organization_id: string | null;
           name: string;
           status: string;
           item: any[];
@@ -85,6 +89,7 @@ export interface Database {
         Insert: {
           id?: string;
           client_id: string;
+          organization_id?: string | null;
           name: string;
           status?: string;
           budget?: number;
@@ -100,6 +105,7 @@ export interface Database {
         Update: {
           id?: string;
           client_id?: string;
+          organization_id?: string | null;
           name?: string;
           status?: string;
           budget?: number;
@@ -118,6 +124,7 @@ export interface Database {
           id: string;
           project_id: string | null;
           client_id: string | null;
+          organization_id: string | null;
           title: string;
           description: string;
           status: string;
@@ -132,6 +139,7 @@ export interface Database {
           id?: string;
           project_id?: string | null;
           client_id?: string | null;
+          organization_id?: string | null;
           title: string;
           description?: string;
           status?: string;
@@ -146,6 +154,7 @@ export interface Database {
           id?: string;
           project_id?: string | null;
           client_id?: string | null;
+          organization_id?: string | null;
           title?: string;
           description?: string;
           status?: string;
@@ -162,6 +171,7 @@ export interface Database {
           id: string;
           project_id: string | null;
           client_id: string;
+          organization_id: string | null;
           is_project_message: boolean;
           sender_id: string;
           sender_name: string;
@@ -174,6 +184,7 @@ export interface Database {
           id?: string;
           project_id?: string | null;
           client_id: string;
+          organization_id?: string | null;
           is_project_message?: boolean;
           sender_id: string;
           sender_name: string;
@@ -186,6 +197,7 @@ export interface Database {
           id?: string;
           project_id?: string | null;
           client_id?: string;
+          organization_id?: string | null;
           is_project_message?: boolean;
           sender_id?: string;
           sender_name?: string;
@@ -200,6 +212,7 @@ export interface Database {
           id: string;
           client_id: string;
           project_id: string | null;
+          organization_id: string | null;
           title: string;
           type: string;
           status: string;
@@ -217,6 +230,7 @@ export interface Database {
           id?: string;
           client_id: string;
           project_id?: string | null;
+          organization_id?: string | null;
           title: string;
           type?: string;
           status?: string;
@@ -234,6 +248,7 @@ export interface Database {
           id?: string;
           client_id?: string;
           project_id?: string | null;
+          organization_id?: string | null;
           title?: string;
           type?: string;
           status?: string;
@@ -253,6 +268,7 @@ export interface Database {
           id: string;
           project_id: string | null;
           client_id: string | null;
+          organization_id: string | null;
           title: string;
           description: string;
           items: any[];
@@ -267,6 +283,7 @@ export interface Database {
           id?: string;
           project_id?: string | null;
           client_id?: string | null;
+          organization_id?: string | null;
           title: string;
           description?: string;
           items?: any[];
@@ -281,6 +298,7 @@ export interface Database {
           id?: string;
           project_id?: string | null;
           client_id?: string | null;
+          organization_id?: string | null;
           title?: string;
           description?: string;
           items?: any[];
@@ -297,6 +315,7 @@ export interface Database {
           id: string;
           project_id: string | null;
           client_id: string | null;
+          organization_id: string | null;
           item: any[];
           reason: string;
           status: string;
@@ -311,6 +330,7 @@ export interface Database {
           id?: string;
           project_id?: string | null;
           client_id?: string | null;
+          organization_id?: string | null;
           item: any[];
           reason: string;
           status?: string;
@@ -325,6 +345,7 @@ export interface Database {
           id?: string;
           project_id?: string | null;
           client_id?: string | null;
+          organization_id?: string | null;
           item?: any[];
           reason?: string;
           status?: string;
@@ -345,6 +366,7 @@ export interface Database {
           avatar: string | null;
           permissions: string[];
           client_id: string | null;
+          organization_id: string | null;
           created_at: string;
         };
         Insert: {
@@ -355,6 +377,7 @@ export interface Database {
           avatar?: string | null;
           permissions?: string[];
           client_id?: string | null;
+          organization_id?: string | null;
           created_at?: string;
         };
         Update: {
@@ -365,6 +388,7 @@ export interface Database {
           avatar?: string | null;
           permissions?: string[];
           client_id?: string | null;
+          organization_id?: string | null;
           created_at?: string;
         };
       };

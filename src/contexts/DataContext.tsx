@@ -6,6 +6,7 @@ import { calculateProjectProgress } from '../utils/progressCalculation';
 export interface Client {
   id: string;
   userId?: string;
+  organizationId?: string;
   name: string;
   email: string;
   phone: string;
@@ -24,6 +25,7 @@ export interface Client {
 export interface Project {
   id: string;
   clientId: string;
+  organizationId?: string;
   name: string;
   status: 'consultation' | 'vision_board' | 'ordering' | 'installation' | 'styling' | 'complete';
   budget: number;
@@ -40,6 +42,7 @@ export interface Task {
   id: string;
   projectId?: string;
   clientId?: string;
+  organizationId?: string;
   title: string;
   description: string;
   status: 'pending' | 'in_progress' | 'completed';
@@ -55,6 +58,7 @@ export interface Message {
   id: string;
   projectId?: string;
   clientId: string;
+  organizationId?: string;
   isProjectMessage?: boolean;
   senderId: string;
   senderName: string;
@@ -68,6 +72,7 @@ export interface Contract {
   id: string;
   clientId: string;
   projectId?: string;
+  organizationId?: string;
   title: string;
   type: 'proposal' | 'design_contract' | 'amendment' | 'completion_certificate';
   status: 'draft' | 'sent' | 'viewed' | 'signed' | 'completed';
@@ -86,6 +91,7 @@ export interface Return {
   id: string;
   projectId: string;
   clientId: string;
+  organizationId?: string;
   item: ReturnItem[];
   reason: string;
   status: 'pending' | 'processed' | 'refunded' | 'exchanged';
@@ -107,6 +113,7 @@ export interface ProjectFile {
   id: string;
   projectId: string;
   clientId: string;
+  organizationId?: string;
   fileName: string;
   fileUrl: string;
   fileType?: string;
@@ -123,6 +130,7 @@ export interface Expense {
   id: string;
   projectId: string;
   clientId: string;
+  organizationId?: string;
   title: string;
   description: string;
   items: ExpenseItem[];
@@ -204,6 +212,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const transformClient = (row: any): Client => ({
     id: row.id,
     userId: row.user_id,
+    organizationId: row.organization_id,
     name: row.name,
     email: row.email,
     phone: row.phone,
@@ -223,6 +232,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const transformProject = (row: any): Project => ({
     id: row.id,
     clientId: row.client_id,
+    organizationId: row.organization_id,
     name: row.name,
     status: row.status || 'consultation',
     budget: row.budget,
@@ -240,6 +250,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     id: row.id,
     projectId: row.project_id,
     clientId: row.client_id,
+    organizationId: row.organization_id,
     title: row.title,
     description: row.description || '',
     status: row.status,
@@ -256,6 +267,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     id: row.id,
     projectId: row.project_id,
     clientId: row.client_id,
+    organizationId: row.organization_id,
     isProjectMessage: row.is_project_message,
     senderId: row.sender_id,
     senderName: row.sender_name,
@@ -270,6 +282,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     id: row.id,
     clientId: row.client_id,
     projectId: row.project_id,
+    organizationId: row.organization_id,
     title: row.title,
     type: row.type,
     status: row.status,
@@ -289,6 +302,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     id: row.id,
     projectId: row.project_id,
     clientId: row.client_id,
+    organizationId: row.organization_id,
     item: Array.isArray(row.items) ? row.items : [],
     reason: row.reason,
     status: row.status,
@@ -305,6 +319,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     id: row.id,
     projectId: row.project_id,
     clientId: row.client_id,
+    organizationId: row.organization_id,
     title: row.title,
     description: row.description || '',
     items: row.items || [],
@@ -321,6 +336,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     id: row.id,
     projectId: row.project_id,
     clientId: row.client_id,
+    organizationId: row.organization_id,
     fileName: row.file_name,
     fileUrl: row.file_url,
     fileType: row.file_type,
@@ -622,6 +638,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .from('clients')
       .insert({
         user_id: clientData.userId,
+        organization_id: clientData.organizationId,
         name: clientData.name,
         email: clientData.email,
         phone: clientData.phone,
@@ -647,6 +664,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const updateClient = async (id: string, updates: Partial<Client>) => {
     const dbUpdates: any = {};
     if (updates.userId !== undefined) dbUpdates.user_id = updates.userId;
+    if (updates.organizationId !== undefined) dbUpdates.organization_id = updates.organizationId;
     if (updates.name !== undefined) dbUpdates.name = updates.name;
     if (updates.email !== undefined) dbUpdates.email = updates.email;
     if (updates.phone !== undefined) dbUpdates.phone = updates.phone;
@@ -693,6 +711,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .from('projects')
       .insert({
         client_id: projectData.clientId,
+        organization_id: projectData.organizationId,
         name: projectData.name,
         status: projectData.status,
         budget: projectData.budget,
@@ -743,6 +762,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     const dbUpdates: any = {};
     if (updates.clientId !== undefined) dbUpdates.client_id = updates.clientId;
+    if (updates.organizationId !== undefined) dbUpdates.organization_id = updates.organizationId;
     if (updates.name !== undefined) dbUpdates.name = updates.name;
     if (updates.status !== undefined) dbUpdates.status = updates.status;
     if (updates.budget !== undefined) dbUpdates.budget = updates.budget;
@@ -781,6 +801,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .insert({
         project_id: taskData.projectId,
         client_id: taskData.clientId,
+        organization_id: taskData.organizationId,
         title: taskData.title,
         description: taskData.description,
         status: taskData.status,
@@ -816,6 +837,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const dbUpdates: any = {};
     if (updates.projectId !== undefined) dbUpdates.project_id = updates.projectId;
     if (updates.clientId !== undefined) dbUpdates.client_id = updates.clientId;
+    if (updates.organizationId !== undefined) dbUpdates.organization_id = updates.organizationId;
     if (updates.title !== undefined) dbUpdates.title = updates.title;
     if (updates.description !== undefined) dbUpdates.description = updates.description;
     if (updates.status !== undefined) dbUpdates.status = updates.status;
@@ -866,6 +888,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .insert({
         project_id: messageData.projectId,
         client_id: messageData.clientId,
+        organization_id: messageData.organizationId,
         is_project_message: messageData.isProjectMessage,
         sender_id: messageData.senderId,
         sender_name: messageData.senderName,
@@ -909,6 +932,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .insert({
         client_id: contractData.clientId,
         project_id: contractData.projectId,
+        organization_id: contractData.organizationId,
         title: contractData.title,
         type: contractData.type,
         status: contractData.status,
@@ -934,6 +958,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const dbUpdates: any = {};
     if (updates.clientId !== undefined) dbUpdates.client_id = updates.clientId;
     if (updates.projectId !== undefined) dbUpdates.project_id = updates.projectId;
+    if (updates.organizationId !== undefined) dbUpdates.organization_id = updates.organizationId;
     if (updates.title !== undefined) dbUpdates.title = updates.title;
     if (updates.type !== undefined) dbUpdates.type = updates.type;
     if (updates.status !== undefined) dbUpdates.status = updates.status;
@@ -972,6 +997,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .insert({
         project_id: returnData.projectId,
         client_id: returnData.clientId,
+        organization_id: returnData.organizationId,
         item: returnData.item?.[0]?.name || 'Return Item',
         items: returnData.item || [],
         reason: returnData.reason,
@@ -995,6 +1021,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const dbUpdates: any = {};
     if (updates.projectId !== undefined) dbUpdates.project_id = updates.projectId;
     if (updates.clientId !== undefined) dbUpdates.client_id = updates.clientId;
+    if (updates.organizationId !== undefined) dbUpdates.organization_id = updates.organizationId;
     if (updates.item !== undefined) dbUpdates.item = updates.item?.[0]?.name || 'Return Item';
     if (updates.item !== undefined) dbUpdates.items = updates.item;
     if (updates.reason !== undefined) dbUpdates.reason = updates.reason;
@@ -1031,6 +1058,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .insert({
         project_id: expenseData.projectId,
         client_id: expenseData.clientId,
+        organization_id: expenseData.organizationId,
         title: expenseData.title,
         description: expenseData.description,
         items: expenseData.items,
@@ -1061,6 +1089,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const dbUpdates: any = {};
     if (updates.projectId !== undefined) dbUpdates.project_id = updates.projectId;
     if (updates.clientId !== undefined) dbUpdates.client_id = updates.clientId;
+    if (updates.organizationId !== undefined) dbUpdates.organization_id = updates.organizationId;
     if (updates.title !== undefined) dbUpdates.title = updates.title;
     if (updates.description !== undefined) dbUpdates.description = updates.description;
     if (updates.items !== undefined) dbUpdates.items = updates.items;
@@ -1174,6 +1203,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .insert({
         project_id: fileData.projectId,
         client_id: fileData.clientId,
+        organization_id: fileData.organizationId,
         file_name: fileData.fileName,
         file_url: fileData.fileUrl,
         file_type: fileData.fileType,
@@ -1195,6 +1225,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const dbUpdates: any = {};
     if (updates.projectId !== undefined) dbUpdates.project_id = updates.projectId;
     if (updates.clientId !== undefined) dbUpdates.client_id = updates.clientId;
+    if (updates.organizationId !== undefined) dbUpdates.organization_id = updates.organizationId;
     if (updates.fileName !== undefined) dbUpdates.file_name = updates.fileName;
     if (updates.fileUrl !== undefined) dbUpdates.file_url = updates.fileUrl;
     if (updates.fileType !== undefined) dbUpdates.file_type = updates.fileType;
