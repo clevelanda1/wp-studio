@@ -35,7 +35,6 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isPasswordReset, setIsPasswordReset] = useState(false);
 
   // Fetch user profile from database with better error handling
   const fetchUserProfile = async (supabaseUser: SupabaseUser): Promise<User | null> => {
@@ -141,16 +140,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     let mounted = true;
     let timeoutId: NodeJS.Timeout;
 
-    // Check if this is a password reset flow
-    const urlParams = new URLSearchParams(window.location.search);
-    const isResetFlow = urlParams.has('access_token') && urlParams.has('refresh_token') && window.location.pathname === '/reset-password';
-    
-    if (isResetFlow) {
-      setIsPasswordReset(true);
-      setLoading(false);
-      return;
-    }
-
     const initAuth = async () => {
       try {
         console.log('🔍 Initializing auth...');
@@ -179,8 +168,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         if (session?.user && mounted) {
           console.log('🔍 Session found, fetching profile...');
           
-          // Don't auto-login if this is a password reset flow
-          if (isPasswordReset) {
+          // Check if this is a password reset flow - if so, don't auto-login
+          const urlParams = new URLSearchParams(window.location.search);
+          const isResetFlow = urlParams.has('access_token') && urlParams.has('refresh_token') && window.location.pathname === '/reset-password';
+          
+          if (isResetFlow) {
+            console.log('🔍 Password reset flow detected, not auto-logging in');
             setUser(null);
             setLoading(false);
             return;
@@ -216,14 +209,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       console.log('🔍 Auth state changed:', event);
 
-      // Handle password reset flow
-      if (event === 'PASSWORD_RECOVERY') {
-        setIsPasswordReset(true);
-        setUser(null);
-        setLoading(false);
-        return;
-      }
-
       // Clear any existing timeout
       if (authChangeTimeout) {
         clearTimeout(authChangeTimeout);
@@ -235,14 +220,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         if (event === 'SIGNED_OUT' || !session?.user) {
           setUser(null);
-          setIsPasswordReset(false);
           setLoading(false);
           return;
         }
 
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          // Don't auto-login during password reset
-          if (isPasswordReset) {
+          // Check if this is a password reset flow - if so, don't auto-login
+          const urlParams = new URLSearchParams(window.location.search);
+          const isResetFlow = urlParams.has('access_token') && urlParams.has('refresh_token') && window.location.pathname === '/reset-password';
+          
+          if (isResetFlow) {
+            console.log('🔍 Password reset flow detected in auth change, not auto-logging in');
+            setUser(null);
+            setLoading(false);
             return;
           }
           
@@ -250,7 +240,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           const profile = await fetchUserProfile(session.user);
           if (mounted) {
             setUser(profile);
-            setIsPasswordReset(false);
             setLoading(false);
           }
         }
@@ -334,7 +323,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
     
     // Clear password reset state after successful update
-    setIsPasswordReset(false);
     
     console.log('✅ Password updated successfully');
   };
