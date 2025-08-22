@@ -17,7 +17,17 @@ import LoadingSpinner from './components/common/LoadingSpinner';
 
 function App() {
   function AppRoutes() {
-    const { user, loading } = useAuth();
+    const { user, loading, isPasswordResetFlowActive } = useAuth();
+
+    // If we're in a password reset flow, always show the reset page
+    if (isPasswordResetFlowActive) {
+      return (
+        <Routes>
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="*" element={<Navigate to="/reset-password" replace />} />
+        </Routes>
+      );
+    }
 
     if (loading) {
       return (

@@ -16,6 +16,7 @@ export interface User {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  isPasswordResetFlowActive: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
@@ -35,6 +36,15 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isPasswordResetFlowActive, setIsPasswordResetFlowActive] = useState(false);
+
+  // Check if we're in a password reset flow
+  const checkPasswordResetFlow = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasTokens = urlParams.has('access_token') && urlParams.has('refresh_token');
+    const isResetPath = window.location.pathname === '/reset-password';
+    return hasTokens && isResetPath;
+  };
 
   // Fetch user profile from database with better error handling
   const fetchUserProfile = async (supabaseUser: SupabaseUser): Promise<User | null> => {
@@ -144,6 +154,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       try {
         console.log('🔍 Initializing auth...');
         
+        // Check if we're in a password reset flow first
+        const isResetFlow = checkPasswordResetFlow();
+        if (isResetFlow) {
+          console.log('🔍 Password reset flow detected - preventing auto-login');
+          setIsPasswordResetFlowActive(true);
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+        
         // Set a reasonable timeout
         timeoutId = setTimeout(() => {
           if (mounted && loading) {
@@ -167,17 +187,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         if (session?.user && mounted) {
           console.log('🔍 Session found, fetching profile...');
-          
-          // Check if this is a password reset flow - if so, don't auto-login
-          const urlParams = new URLSearchParams(window.location.search);
-          const isResetFlow = urlParams.has('access_token') && urlParams.has('refresh_token') && window.location.pathname === '/reset-password';
-          
-          if (isResetFlow) {
-            console.log('🔍 Password reset flow detected, not auto-logging in');
-            setUser(null);
-            setLoading(false);
-            return;
-          }
           
           const profile = await fetchUserProfile(session.user);
           
@@ -208,6 +217,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (!mounted) return;
 
       console.log('🔍 Auth state changed:', event);
+      
+      // Always check for password reset flow first
+      const isResetFlow = checkPasswordResetFlow();
+      if (isResetFlow) {
+        console.log('🔍 Password reset flow detected in auth change - preventing auto-login');
+        setIsPasswordResetFlowActive(true);
+        setUser(null);
+        setLoading(false);
+        return;
+      }
 
       // Clear any existing timeout
       if (authChangeTimeout) {
@@ -225,17 +244,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
 
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          // Check if this is a password reset flow - if so, don't auto-login
-          const urlParams = new URLSearchParams(window.location.search);
-          const isResetFlow = urlParams.has('access_token') && urlParams.has('refresh_token') && window.location.pathname === '/reset-password';
-          
-          if (isResetFlow) {
-            console.log('🔍 Password reset flow detected in auth change, not auto-logging in');
-            setUser(null);
-            setLoading(false);
-            return;
-          }
-          
           setLoading(true);
           const profile = await fetchUserProfile(session.user);
           if (mounted) {
@@ -323,11 +331,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
     
     // Clear password reset state after successful update
+    setIsPasswordResetFlowActive(false);
     
     console.log('✅ Password updated successfully');
   };
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, resetPassword, updatePassword }}>
+    <AuthContext.Provider value={{ user, loading, isPasswordResetFlowActive, login, logout, resetPassword, updatePassword }}>
       {children}
     </AuthContext.Provider>
   );
