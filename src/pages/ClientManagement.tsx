@@ -564,7 +564,7 @@ const ClientManagement = () => {
                   </div>
                   <button
                     onClick={handleCancelEdit}
-                    className="p-2 text-gray-300 hover:text-gray-500 rounded-md hover:bg-gray-50"
+                    className="p-2 text-gray-200 hover:text-gray-400 rounded-md hover:bg-gray-50"
                   >
                     <X className="w-5 h-5" />
                   </button>
