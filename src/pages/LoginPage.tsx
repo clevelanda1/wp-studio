@@ -45,19 +45,43 @@ const LoginPage: React.FC = () => {
       await login(email, password);
     } catch (err: any) {
       console.error('❌ Login failed:', err);
-      if (err.message.includes('Invalid login credentials') || err.message.includes('Invalid email or password')) {
-        setError('The email or password you entered is incorrect. Please double-check your credentials and try again.');
-      } else if (err.message.includes('Email not confirmed') || err.message.includes('confirm')) {
+      
+      // Handle different types of authentication errors
+      const errorMessage = err.message?.toLowerCase() || '';
+      
+      if (errorMessage.includes('invalid login credentials') || 
+          errorMessage.includes('invalid email or password') ||
+          errorMessage.includes('email not confirmed')) {
+        setError('Invalid email or password. Please check your credentials and try again.');
+      } else if (errorMessage.includes('email not confirmed') || 
+                 errorMessage.includes('confirm your email') ||
+                 errorMessage.includes('email confirmation')) {
         setError('Please check your email and confirm your account before signing in.');
-      } else if (err.message.includes('Too many requests') || err.message.includes('rate limit')) {
+      } else if (errorMessage.includes('too many requests') || 
+                 errorMessage.includes('rate limit') ||
+                 errorMessage.includes('rate_limit')) {
         setError('Too many login attempts. Please wait a few minutes before trying again.');
-      } else if (err.message.includes('User not found') || err.message.includes('not found')) {
+      } else if (errorMessage.includes('user not found') || 
+                 errorMessage.includes('not found') ||
+                 errorMessage.includes('no user found')) {
         setError('No account found with this email address. Please check your email or sign up for a new account.');
-      } else if (err.message.includes('Wrong password') || err.message.includes('password')) {
+      } else if (errorMessage.includes('wrong password') || 
+                 errorMessage.includes('incorrect password') ||
+                 errorMessage.includes('password is incorrect')) {
         setError('The password you entered is incorrect. Please try again or reset your password.');
+      } else if (errorMessage.includes('password should be at least') ||
+                 errorMessage.includes('password must be at least')) {
+        setError('Password must be at least 6 characters long.');
+      } else if (errorMessage.includes('invalid email') ||
+                 errorMessage.includes('email is invalid')) {
+        setError('Please enter a valid email address.');
       } else {
         setError('Login failed. Please check your email and password, then try again.');
       }
+      
+      // Don't clear the email field on error - user shouldn't have to re-enter it
+      // Only clear password for security
+      setPassword('');
     } finally {
       setLoading(false);
     }
