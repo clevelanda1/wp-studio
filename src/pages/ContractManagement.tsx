@@ -260,8 +260,6 @@ const ContractManagement: React.FC = () => {
     <div className="flex h-screen bg-gray-50">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        
         <main className="flex-1 overflow-y-auto">
           {/* Hero Section with Stats */}
           <div className="bg-white border-b border-gray-100">
