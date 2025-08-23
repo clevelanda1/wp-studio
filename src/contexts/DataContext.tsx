@@ -183,6 +183,7 @@ interface DataContextType {
   deleteTask: (id: string) => Promise<void>;
   deleteContract: (id: string) => Promise<void>;
   deleteMessage: (id: string) => Promise<void>;
+  deleteClient: (id: string) => Promise<void>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -644,8 +645,8 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         phone: clientData.phone,
         status: clientData.status,
         budget: clientData.budget,
-        move_in_date: clientData.moveInDate,
-        reveal_date: clientData.revealDate,
+        move_in_date: clientData.moveInDate || null,
+        reveal_date: clientData.revealDate || null,
         style_preferences: clientData.stylePreferences,
         notes: clientData.notes,
         lead_source: clientData.leadSource,
@@ -670,8 +671,8 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (updates.phone !== undefined) dbUpdates.phone = updates.phone;
     if (updates.status !== undefined) dbUpdates.status = updates.status;
     if (updates.budget !== undefined) dbUpdates.budget = updates.budget;
-    if (updates.moveInDate !== undefined) dbUpdates.move_in_date = updates.moveInDate;
-    if (updates.revealDate !== undefined) dbUpdates.reveal_date = updates.revealDate;
+    if (updates.moveInDate !== undefined) dbUpdates.move_in_date = updates.moveInDate || null;
+    if (updates.revealDate !== undefined) dbUpdates.reveal_date = updates.revealDate || null;
     if (updates.stylePreferences !== undefined) dbUpdates.style_preferences = updates.stylePreferences;
     if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
     if (updates.leadSource !== undefined) dbUpdates.lead_source = updates.leadSource;
@@ -1192,6 +1193,16 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setMessages(prev => prev.filter(message => message.id !== id));
   };
 
+  const deleteClient = async (id: string) => {
+    const { error } = await supabase
+      .from('clients')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+    setClients(prev => prev.filter(client => client.id !== id));
+  };
+
   const addProjectFile = async (fileData: Omit<ProjectFile, 'id' | 'createdAt'>) => {
     // Ensure client_id is set for proper data sharing
     if (!fileData.clientId) {
@@ -1292,7 +1303,8 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       deleteProject,
       deleteTask,
       deleteContract,
-      deleteMessage
+      deleteMessage,
+      deleteClient
     }}>
       {children}
     </DataContext.Provider>

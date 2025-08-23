@@ -34,3 +34,50 @@
 .overflow-x-auto {
   -webkit-overflow-scrolling: touch;
 }
+
+/* Hide unwanted Sign Out element that appears in bottom right */
+/* Try multiple selectors to catch different possible implementations */
+button:contains("Sign Out") {
+  display: none !important;
+}
+
+/* Hide elements with Sign Out text in bottom right corner */
+[style*="position: fixed"][style*="bottom"][style*="right"]:contains("Sign Out") {
+  display: none !important;
+}
+
+/* Hide any fixed positioned elements containing "Sign Out" text */
+*[style*="position: fixed"]:has-text("Sign Out") {
+  display: none !important;
+}
+
+/* Generic selectors for common sign out button patterns */
+.sign-out-button,
+.signout-btn,
+.logout-button,
+.logout-btn,
+#sign-out,
+#signout,
+#logout {
+  display: none !important;
+}
+
+/* Hide any element with specific positioning that might be the sign out */
+[style*="position: fixed"][style*="bottom: 20px"],
+[style*="position: fixed"][style*="bottom: 24px"],
+[style*="position: fixed"][style*="right: 20px"],
+[style*="position: fixed"][style*="right: 24px"] {
+  display: none !important;
+}
+
+/* More specific targeting for elements in bottom right */
+[style*="position: fixed"][style*="bottom"][style*="right"] {
+  display: none !important;
+}
+
+/* Target any button or div in bottom right corner */
+button[style*="position: fixed"][style*="bottom"][style*="right"],
+div[style*="position: fixed"][style*="bottom"][style*="right"],
+span[style*="position: fixed"][style*="bottom"][style*="right"] {
+  display: none !important;
+}

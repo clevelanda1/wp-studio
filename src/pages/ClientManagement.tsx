@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Edit, Search, User, Mail, Phone, MapPin, Calendar, ArrowUpRight, ArrowDownRight, X, Plus, Grid3X3, List } from 'lucide-react';
+import { Edit, Search, User, Mail, Phone, MapPin, Calendar, ArrowUpRight, ArrowDownRight, X, Plus, Grid3X3, List, Trash2, MessageCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useData } from '../contexts/DataContext';
 import Sidebar from '../components/layout/Sidebar';
@@ -8,7 +8,7 @@ import Header from '../components/layout/Header';
 
 const ClientManagement = () => {
   const { user } = useAuth();
-  const { clients, projects, users, loading, updateClient, addClient } = useData();
+  const { clients, projects, users, loading, updateClient, addClient, deleteClient } = useData();
   const navigate = useNavigate();
   
   // State variables
@@ -17,6 +17,8 @@ const ClientManagement = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const [editingClient, setEditingClient] = useState<any>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [deletingClient, setDeletingClient] = useState<string | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const [debugMode] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -130,7 +132,8 @@ const ClientManagement = () => {
     
     addClient({
       ...formData,
-      budget: parseFloat(formData.budget) || 0
+      budget: parseFloat(formData.budget) || 0,
+      organizationId: 'd6e612bb-da10-461e-bcf9-d5af1c4134e5'
     });
 
     // Reset form
@@ -152,6 +155,19 @@ const ClientManagement = () => {
 
   const handleMessageClient = (clientId: string) => {
     navigate('/messages', { state: { selectedClientId: clientId } });
+  };
+
+  const handleDeleteClient = async (clientId: string) => {
+    setShowDeleteConfirm(null);
+    try {
+      setDeletingClient(clientId);
+      await deleteClient(clientId);
+    } catch (error) {
+      console.error('Failed to delete client:', error);
+      alert('Failed to delete client. Please try again.');
+    } finally {
+      setDeletingClient(null);
+    }
   };
 
   const formatCurrency = (amount: number) => {
@@ -323,7 +339,7 @@ const ClientManagement = () => {
                   </div>
                   <button
                     onClick={() => setShowCreateForm(false)}
-                    className="p-2 text-gray-400 hover:text-gray-600 rounded-md hover:bg-gray-50"
+                    className="p-2 text-gray-300 hover:text-gray-500 rounded-md hover:bg-gray-50"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -881,6 +897,13 @@ const ClientManagement = () => {
                           >
                             Message
                           </button>
+                          <button 
+                            onClick={() => setShowDeleteConfirm(client.id)}
+                            disabled={deletingClient === client.id}
+                            className="bg-red-100 text-red-700 py-2.5 px-3 rounded-lg hover:bg-red-200 transition-colors text-sm font-semibold disabled:opacity-50 touch-manipulation"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -955,10 +978,19 @@ const ClientManagement = () => {
                                 <Edit className="w-4 h-4" />
                               </button>
                               <button 
-                                onClick={() => handleMessageClient(client.id)}
+                                onClick={() => navigate('/messages', { state: { selectedClientId: client.id } })}
                                 className="text-gray-400 hover:text-gray-600 p-1"
+                                title="Send Message"
                               >
-                                Message
+                                <MessageCircle className="w-4 h-4" />
+                              </button>
+                              <button 
+                                onClick={() => setShowDeleteConfirm(client.id)}
+                                disabled={deletingClient === client.id}
+                                className="text-red-400 hover:text-red-600 p-1 disabled:opacity-50 touch-manipulation"
+                                title="Delete Client"
+                              >
+                                <Trash2 className="w-4 h-4" />
                               </button>
                             </td>
                           </tr>
@@ -984,6 +1016,50 @@ const ClientManagement = () => {
               </div>
             )}
           </div>
+
+          {/* Delete Confirmation Modal */}
+          {showDeleteConfirm && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                    <Trash2 className="w-5 h-5 text-red-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">Delete Client</h3>
+                    <p className="text-sm text-gray-600">This action cannot be undone</p>
+                  </div>
+                </div>
+                
+                <div className="mb-6">
+                  <p className="text-gray-700 mb-3">
+                    Are you sure you want to delete this client?
+                  </p>
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                    <p className="text-red-800 text-sm">
+                      <strong>"{clients.find(c => c.id === showDeleteConfirm)?.name}"</strong> and all associated data (projects, tasks, messages, contracts) will be permanently removed.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                  <button
+                    onClick={() => setShowDeleteConfirm(null)}
+                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors touch-manipulation"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => handleDeleteClient(showDeleteConfirm)}
+                    disabled={deletingClient === showDeleteConfirm}
+                    className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                  >
+                    {deletingClient === showDeleteConfirm ? 'Deleting...' : 'Delete Client'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>

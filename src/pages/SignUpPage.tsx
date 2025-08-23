@@ -76,6 +76,7 @@ const SignUpPage: React.FC = () => {
       // 2. Create client record
       const clientData = {
         user_id: authData.user.id,
+        organization_id: 'd6e612bb-da10-461e-bcf9-d5af1c4134e5', // Explicitly assign organization
         name: formData.name,
         email: formData.email,
         phone: '', // Default empty phone
@@ -107,6 +108,7 @@ const SignUpPage: React.FC = () => {
       // 3. Create user profile record
       const userData = {
         id: authData.user.id,
+        organization_id: 'd6e612bb-da10-461e-bcf9-d5af1c4134e5', // Explicitly assign organization
         name: formData.name,
         email: formData.email,
         role: 'client',
