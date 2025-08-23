@@ -135,7 +135,17 @@ const SignUpPage: React.FC = () => {
 
     } catch (err: any) {
       console.error('❌ Registration failed:', err);
-      setError(err.message || 'Registration failed. Please try again.');
+      if (err.message.includes('User already registered')) {
+        setError('An account with this email already exists. Please sign in instead or use a different email.');
+      } else if (err.message.includes('Password should be at least')) {
+        setError('Password must be at least 6 characters long.');
+      } else if (err.message.includes('Invalid email')) {
+        setError('Please enter a valid email address.');
+      } else if (err.message.includes('Signup is disabled')) {
+        setError('Account registration is currently disabled. Please contact support.');
+      } else {
+        setError(err.message || 'Registration failed. Please check your information and try again.');
+      }
     } finally {
       setLoading(false);
     }

@@ -45,7 +45,15 @@ const LoginPage: React.FC = () => {
       await login(email, password);
     } catch (err: any) {
       console.error('❌ Login failed:', err);
-      setError(err.message || 'Login failed. Please try again.');
+      if (err.message.includes('Invalid login credentials')) {
+        setError('Invalid email or password. Please check your credentials and try again.');
+      } else if (err.message.includes('Email not confirmed')) {
+        setError('Please check your email and confirm your account before signing in.');
+      } else if (err.message.includes('Too many requests')) {
+        setError('Too many login attempts. Please wait a few minutes before trying again.');
+      } else {
+        setError(err.message || 'Login failed. Please check your credentials and try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -61,7 +69,13 @@ const LoginPage: React.FC = () => {
       setForgotPasswordSuccess(true);
     } catch (err: any) {
       console.error('❌ Password reset failed:', err);
-      setError(err.message || 'Failed to send reset email. Please try again.');
+      if (err.message.includes('User not found')) {
+        setError('No account found with this email address. Please check your email or sign up for a new account.');
+      } else if (err.message.includes('Email rate limit exceeded')) {
+        setError('Too many reset requests. Please wait before requesting another reset email.');
+      } else {
+        setError(err.message || 'Failed to send reset email. Please check your email address and try again.');
+      }
     } finally {
       setForgotPasswordLoading(false);
     }
@@ -305,10 +319,10 @@ const LoginPage: React.FC = () => {
       {!isFormVisible && (
         <button
           onClick={() => setIsFormVisible(true)}
-          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 px-4 sm:px-6 lg:px-6 py-2 sm:py-2 bg-white/10 hover:bg-white/15 backdrop-blur-sm rounded-full shadow-lg border border-white/30 transition-all duration-200 z-20 touch-manipulation"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 px-4 sm:px-6 lg:px-7 py-2 sm:py-2.5 bg-white/10 hover:bg-white/15 backdrop-blur-sm rounded-full shadow-lg border border-white/30 transition-all duration-200 z-20 touch-manipulation"
           title="Show login form"
         >
-          <span className="text-white font-small text-xs sm:text-sm lg:text-md">Sign In</span>
+          <span className="text-white font-thin text-xs sm:text-sm lg:text-md -mt-1">Sign In</span>
         </button>
       )}
     </div>

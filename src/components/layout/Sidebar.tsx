@@ -150,7 +150,7 @@ const Sidebar: React.FC = () => {
                   <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-white/5 to-white/5 flex items-center justify-center text-white font-semibold text-sm">
-                    {user?.name?.split(' ').map(n => n[0]).join('') || 'U'}
+                    {user?.name?.split(' ').map(n => n[0].toUpperCase()).join('') || 'U'}
                   </div>
                 )}
               </div>
@@ -187,7 +187,7 @@ const Sidebar: React.FC = () => {
                   <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-white/5 to-white/5 flex items-center justify-center text-white font-semibold text-sm">
-                    {user?.name?.split(' ').map(n => n[0]).join('') || 'U'}
+                    {user?.name?.split(' ').map(n => n[0].toUpperCase()).join('') || 'U'}
                   </div>
                 )}
               </div>
