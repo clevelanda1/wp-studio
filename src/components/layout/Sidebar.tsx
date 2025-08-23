@@ -168,10 +168,10 @@ const Sidebar: React.FC = () => {
               >
                 <LogOut className="w-5 h-5" />
                 
-                {/* Tooltip for collapsed state */}
+                {/* Tooltip for collapsed state 
                 <div className="hidden lg:block lg:group/logout-hover:block absolute left-full ml-2 px-2 py-1 bg-zinc-800 text-white text-xs rounded-md whitespace-nowrap z-50 pointer-events-none">
                   Sign Out1
-                </div>
+                </div>*/}
               </button>
             </div>
           </div>
