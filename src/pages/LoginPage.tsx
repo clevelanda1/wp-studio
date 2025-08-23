@@ -279,7 +279,7 @@ const LoginPage: React.FC = () => {
                         We've sent a password reset link to <strong>{forgotPasswordEmail}</strong>
                       </p>
                       <p className="text-gray-500 text-xs">
-                        Didn't receive the email? Check your spam folder or try again.
+                        Reset your password by clicking your profile once you are logged in.
                       </p>
                     </div>
                     <button
@@ -308,7 +308,7 @@ const LoginPage: React.FC = () => {
           className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 px-4 sm:px-6 lg:px-7 py-2 sm:py-2.5 bg-white/10 hover:bg-white/15 backdrop-blur-sm rounded-full shadow-lg border border-white/30 transition-all duration-200 z-20 touch-manipulation"
           title="Show login form"
         >
-          <span className="text-white font-thin text-xs sm:text-sm lg:text-md">Sign In</span>
+          <span className="text-white font-thin text-xs sm:text-sm lg:text-md -mt-1">Sign In</span>
         </button>
       )}
     </div>
