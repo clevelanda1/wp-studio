@@ -16,6 +16,7 @@ const SignUpPage: React.FC = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isFormVisible, setIsFormVisible] = useState(true);
 
   // Slideshow images - same as login page
   const slideshowImages = [
@@ -204,8 +205,20 @@ const SignUpPage: React.FC = () => {
       </div>
 
       {/* Sign Up Form Container */}
-      <div className="w-full max-w-md fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 mx-4">
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-6 sm:p-8">
+      {isFormVisible && (
+        <div 
+          className="w-full max-w-md fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 group mx-4"
+        >
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-6 sm:p-8 relative">
+            {/* Hide Button - appears on hover */}
+            <button
+              onClick={() => setIsFormVisible(false)}
+              className="absolute top-2 right-2 sm:top-3 sm:right-3 lg:top-4 lg:right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100 touch-manipulation"
+              title="Hide form"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
           {/* Branding Header */}
           <div className="mb-6 text-center">
             <style>{`
@@ -327,6 +340,18 @@ const SignUpPage: React.FC = () => {
           </form>
         </div>
       </div>
+      )}
+
+      {/* Show Form Button - appears when form is hidden */}
+      {!isFormVisible && (
+        <button
+          onClick={() => setIsFormVisible(true)}
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 px-4 sm:px-6 lg:px-7 py-2 sm:py-2.5 bg-white/10 hover:bg-white/15 backdrop-blur-sm rounded-full shadow-lg border border-white/30 transition-all duration-200 z-20 touch-manipulation"
+          title="Show signup form"
+        >
+          <span className="text-white font-thin text-xs sm:text-sm lg:text-md -mt-1">Sign Up</span>
+        </button>
+      )}
     </div>
   );
 };
