@@ -86,8 +86,8 @@ const ClientDashboard: React.FC = () => {
           <main className="flex-1 overflow-y-auto flex items-center justify-center">
             <div className="text-center">
               <Home className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No Active Projects</h3>
-              <p className="text-gray-600">Your projects will appear here once they're created.</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Empty Dashboard</h3>
+              <p className="text-gray-600">Your project data will appear here once they're created.</p>
             </div>
           </main>
         </div>
