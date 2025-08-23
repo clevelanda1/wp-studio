@@ -144,12 +144,6 @@ const ClientDashboard: React.FC = () => {
           {/* Hero Section with Header and Stats */}
           <div className="bg-white border-b border-gray-100">
             <div className="px-4 sm:px-6 lg:px-8 py-6">
-              {/* Header 
-              <div className="mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">Welcome back, {client.name.split(' ')[0]}!</h1>
-                <p className="text-gray-600">Here's the latest on your interior design project</p>
-              </div>*/}
-
               {/* Stats */}
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
                 {stats.map((stat, index) => (
