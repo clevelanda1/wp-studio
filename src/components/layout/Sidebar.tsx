@@ -197,7 +197,7 @@ const Sidebar: React.FC = () => {
               </div>
             </div>
             
-            {/*<div className="mt-4">
+            <div className="mt-4">
               <button 
                 onClick={() => {
                   logout();
@@ -207,7 +207,7 @@ const Sidebar: React.FC = () => {
               >
                 <span>Sign Out</span>
               </button>
-              </div>*/}
+            </div>
           </div>
         </div>
       </div>
