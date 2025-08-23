@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import ChangePasswordModal from '../common/ChangePasswordModal';
 import { 
   Menu, 
   X, 
@@ -17,6 +18,7 @@ import {
 const Sidebar: React.FC = () => {
   const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   
   const businessNavItems = [
     { to: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -122,8 +124,8 @@ const Sidebar: React.FC = () => {
                   }
                   title={item.label}
                 >
-                  <IconComponent className="w-5 h-5 flex-shrink-0" />
-                  <span className="hidden lg:block lg:opacity-0 lg:group-hover:opacity-100 lg:group-hover:ml-3 font-small text-sm tracking-wide transition-all duration-300 lg:w-0 lg:group-hover:w-auto overflow-hidden whitespace-nowrap">
+                  <IconComponent className="w-5 h-5 flex-shrink-0 lg:group-hover:hidden" />
+                  <span className="hidden lg:block lg:opacity-0 lg:group-hover:opacity-100 lg:group-hover:ml-0 font-small text-sm tracking-wide transition-all duration-300 lg:w-0 lg:group-hover:w-auto overflow-hidden whitespace-nowrap text-gray-200">
                     {item.label}
                   </span>
                   
@@ -176,7 +178,10 @@ const Sidebar: React.FC = () => {
 
           {/* Expanded state - show full user section */}
           <div className="hidden lg:group-hover:block">
-            <div className="flex items-center space-x-3 p-4 rounded-lg bg-zinc-800/40 hover:bg-zinc-800/60 transition-all duration-300 border border-zinc-700/30">
+            <div 
+              onClick={() => setShowChangePasswordModal(true)}
+              className="flex items-center space-x-3 p-4 rounded-lg bg-zinc-800/40 hover:bg-zinc-800/60 transition-all duration-300 border border-zinc-700/30 cursor-pointer"
+            >
               <div className="w-8 h-8 rounded-full overflow-hidden ring-1 ring-zinc-600/50 shadow-lg flex-shrink-0">
                 {user?.avatar ? (
                   <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
@@ -207,6 +212,11 @@ const Sidebar: React.FC = () => {
         </div>
       </div>
 
+      {/* Change Password Modal */}
+      <ChangePasswordModal 
+        isOpen={showChangePasswordModal}
+        onClose={() => setShowChangePasswordModal(false)}
+      />
     </>
   );
 };
