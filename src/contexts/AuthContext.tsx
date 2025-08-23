@@ -241,11 +241,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
 
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          // Don't auto-login during password reset
-          if (isPasswordReset) {
-            return;
-          }
-          
           setLoading(true);
           const profile = await fetchUserProfile(session.user);
           if (mounted) {
