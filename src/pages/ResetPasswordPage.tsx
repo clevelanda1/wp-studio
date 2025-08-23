@@ -98,10 +98,6 @@ const ResetPasswordPage: React.FC = () => {
 
         <div className="w-full max-w-md fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 mx-4">
           <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-8 text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="w-8 h-8 text-green-600" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Password Updated!</h2>
             <p className="text-gray-600 mb-6">
               Your password has been successfully updated. You'll be redirected to your dashboard shortly.
             </p>
