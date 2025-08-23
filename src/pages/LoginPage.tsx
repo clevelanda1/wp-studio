@@ -45,14 +45,18 @@ const LoginPage: React.FC = () => {
       await login(email, password);
     } catch (err: any) {
       console.error('❌ Login failed:', err);
-      if (err.message.includes('Invalid login credentials')) {
-        setError('Invalid email or password. Please check your credentials and try again.');
-      } else if (err.message.includes('Email not confirmed')) {
+      if (err.message.includes('Invalid login credentials') || err.message.includes('Invalid email or password')) {
+        setError('The email or password you entered is incorrect. Please double-check your credentials and try again.');
+      } else if (err.message.includes('Email not confirmed') || err.message.includes('confirm')) {
         setError('Please check your email and confirm your account before signing in.');
-      } else if (err.message.includes('Too many requests')) {
+      } else if (err.message.includes('Too many requests') || err.message.includes('rate limit')) {
         setError('Too many login attempts. Please wait a few minutes before trying again.');
+      } else if (err.message.includes('User not found') || err.message.includes('not found')) {
+        setError('No account found with this email address. Please check your email or sign up for a new account.');
+      } else if (err.message.includes('Wrong password') || err.message.includes('password')) {
+        setError('The password you entered is incorrect. Please try again or reset your password.');
       } else {
-        setError(err.message || 'Login failed. Please check your credentials and try again.');
+        setError('Login failed. Please check your email and password, then try again.');
       }
     } finally {
       setLoading(false);
