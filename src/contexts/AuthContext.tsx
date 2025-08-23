@@ -291,12 +291,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const logout = async (): Promise<void> => {
     console.log('🔍 Logout initiated');
+    
+    // If user is already null, no need to logout
+    if (!user) {
+      console.log('✅ User already logged out');
+      setLoading(false);
+      return;
+    }
+    
     setLoading(true);
     
     try {
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error('❌ Logout error:', error);
+        // Even if logout fails, clear the local user state
+        setUser(null);
+        setLoading(false);
+        return;
       }
       // User state will be cleared by auth state change listener
     } catch (error) {
