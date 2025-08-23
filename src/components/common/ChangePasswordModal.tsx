@@ -73,9 +73,6 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-              <Lock className="w-5 h-5 text-blue-600" />
-            </div>
             <div>
               <h2 className="text-xl font-bold text-gray-900">Change Password</h2>
               <p className="text-sm text-gray-600">Update your account password</p>
