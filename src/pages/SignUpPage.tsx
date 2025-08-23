@@ -77,7 +77,7 @@ const SignUpPage: React.FC = () => {
       const clientData = {
         user_id: authData.user.id,
         organization_id: 'd6e612bb-da10-461e-bcf9-d5af1c4134e5', // Explicitly assign organization
-        name: formData.name,
+        name: formData.name.trim(),
         email: formData.email,
         phone: '', // Default empty phone
         address: null,
@@ -109,7 +109,7 @@ const SignUpPage: React.FC = () => {
       const userData = {
         id: authData.user.id,
         organization_id: 'd6e612bb-da10-461e-bcf9-d5af1c4134e5', // Explicitly assign organization
-        name: formData.name,
+        name: formData.name.trim(),
         email: formData.email,
         role: 'client',
         client_id: clientRecord.id
@@ -244,8 +244,7 @@ const SignUpPage: React.FC = () => {
                   Wall Play Studio
                 </h1>
                 <p className="text-xs sm:text-sm text-gray-500 font-small">Create Your Account
-
-</p>
+                </p>
               </div>
             </div>
           </div>
