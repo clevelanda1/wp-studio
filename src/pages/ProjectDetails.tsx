@@ -57,6 +57,59 @@ const ProjectDetails: React.FC = () => {
   const projectContracts = contracts.filter((c) => c.projectId === id);
   const currentProjectFiles = projectFiles.filter((f) => f.projectId === id);
 
+  // For clients, only show tabs that have data shared with them
+  const getVisibleTabs = () => {
+    const baseTabs = [
+      { id: 'overview', label: 'Overview' }
+    ];
+
+    // Always show tasks tab if there are visible tasks
+    if (visibleTasks.length > 0) {
+      baseTabs.push({ id: 'tasks', label: `Tasks (${visibleTasks.length})` });
+    }
+
+    // Show contracts tab if there are contracts for this project
+    if (projectContracts.length > 0) {
+      baseTabs.push({ id: 'contracts', label: `Contracts (${projectContracts.length})` });
+    }
+
+    // For admin users, always show all tabs
+    if (user?.role === 'business_owner' || user?.role === 'team_member') {
+      return [
+        { id: 'overview', label: 'Overview' },
+        { id: 'tasks', label: `Tasks (${visibleTasks.length})` },
+        { id: 'contracts', label: `Contracts (${projectContracts.length})` },
+        { id: 'expenses', label: `Expenses (${projectExpenses.length})` },
+        { id: 'returns', label: `Returns (${projectReturns.length})` },
+        { id: 'files', label: `Files (${currentProjectFiles.length})` },
+      ];
+    }
+
+    // For clients, only show tabs with data
+    if (projectExpenses.length > 0) {
+      baseTabs.push({ id: 'expenses', label: `Expenses (${projectExpenses.length})` });
+    }
+
+    if (projectReturns.length > 0) {
+      baseTabs.push({ id: 'returns', label: `Returns (${projectReturns.length})` });
+    }
+
+    if (currentProjectFiles.length > 0) {
+      baseTabs.push({ id: 'files', label: `Files (${currentProjectFiles.length})` });
+    }
+
+    return baseTabs;
+  };
+
+  const tabs = getVisibleTabs();
+
+  // Reset active tab if it's no longer visible
+  React.useEffect(() => {
+    if (!tabs.find(tab => tab.id === activeTab)) {
+      setActiveTab('overview');
+    }
+  }, [tabs, activeTab]);
+
   // Calculate smart progress
   const smartProgress = project
     ? calculateProjectProgress(project.status as any, projectTasks)
@@ -119,15 +172,6 @@ const ProjectDetails: React.FC = () => {
       </div>
     );
   }
-
-  const tabs = [
-    { id: 'overview', label: 'Overview' },
-    { id: 'tasks', label: `Tasks (${visibleTasks.length})` },
-    { id: 'contracts', label: `Contracts (${projectContracts.length})` },
-    { id: 'expenses', label: `Expenses (${projectExpenses.length})` },
-    { id: 'returns', label: `Returns (${projectReturns.length})` },
-    { id: 'files', label: `Files (${currentProjectFiles.length})` },
-  ];
 
   return (
     <div className="flex h-screen bg-gray-50">
